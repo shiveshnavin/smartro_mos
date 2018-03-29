@@ -21,12 +21,6 @@ let getInfo = function() {
   });
 };
 
-// Blink built-in LED every second
-GPIO.set_mode(led, GPIO.MODE_OUTPUT);
-Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
-  let value = GPIO.toggle(led);
-  print(value ? 'Tick' : 'Tock', 'uptime:', Sys.uptime(), getInfo());
-}, null);
 
 
   Cfg.set( {wifi: {sta: {ssid: "JioFi2_00C3E7"}}} );
@@ -34,16 +28,33 @@ Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
   Cfg.set({wifi: {sta: {enable: true}}});
   print("WIFI CONFIGURED");
 
-  Cfg.set( {wifi: {ap: {ssid: "SmartRo"}}} );
+  Cfg.set( {wifi: {ap: {ssid: "SmartRo"}}} );              
   Cfg.set( {wifi: {ap: {pass: "password"}}} );
   Cfg.set({wifi: {ap: {enable: true}}});
   print("AP CONFIGURED");
   
-    
+  let adc=2;
+  let rate=0;
 /*************************MAIN*******************************************/
 
-//print("START");
-
+  ADC.enable(adc);
+  
+  //print("START");
+  let pin=5;
+  GPIO.set_mode(pin, GPIO.MODE_INPUT);
+  GPIO.set_int_handler(pin, GPIO.INT_EDGE_NEG, function(pin) {
+   //print('Pin', pin, 'got interrupt');
+   rate++;
+    }, null);
+  GPIO.enable_int(pin);
+  
+  // Blink built-in LED every second
+  GPIO.set_mode(led, GPIO.MODE_OUTPUT);
+  Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
+    let value = GPIO.toggle(led);
+    print('Rate = ',rate,' interrupts/sec , ADC = ',ADC.read(adc));
+    rate=0;
+  }, null);
 
 /***************CONNECTION *******************************/
 
