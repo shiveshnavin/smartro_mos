@@ -37,6 +37,12 @@ let getInfo = function() {
   let rate=0;
 /*************************MAIN*******************************************/
 
+let blink=function(){
+  
+  GPIO.write(led,1); 
+  Sys.usleep(300);
+  GPIO.toggle(led);
+}
   ADC.enable(adc);
   
   //print("START");
@@ -48,7 +54,7 @@ let getInfo = function() {
     }, null);
   GPIO.enable_int(pin);
   
-  // Blink built-in LED every second
+   
   GPIO.set_mode(led, GPIO.MODE_OUTPUT);
   Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
     let value = GPIO.toggle(led);
@@ -65,7 +71,7 @@ let getInfo = function() {
     total_ram: Sys.total_ram(),
     free_ram: Sys.free_ram()
     };
-    
+    blink();
     return val;
   })
   
