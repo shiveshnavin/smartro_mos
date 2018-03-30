@@ -52,7 +52,7 @@ let getInfo = function() {
   GPIO.set_mode(led, GPIO.MODE_OUTPUT);
   Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
     let value = GPIO.toggle(led);
-    print('Rate = ',rate*30,' RPM , TDS = ',ADC.read(adc));
+    print('Interrupt Rate = ',rate,' RPM , TDS = ',ADC.read(adc));
     rate=0;
   }, null);
   
@@ -61,11 +61,10 @@ let getInfo = function() {
     
     let val={
     interrupts_sec:rate,
-    adc_val:ADC.read(adc),
-    uptime:Sys.uptime,
+    adc_val:ADC.read(adc), 
     total_ram: Sys.total_ram(),
     free_ram: Sys.free_ram()
-    }
+    };
     
     return val;
   })
