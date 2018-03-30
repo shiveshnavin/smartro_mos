@@ -33,7 +33,7 @@ let getInfo = function() {
   Cfg.set({wifi: {ap: {enable: true}}});
   print("AP CONFIGURED");
   
-  let adc=2;
+  let adc=0;
   let rate=0;
 /*************************MAIN*******************************************/
 
@@ -52,9 +52,30 @@ let getInfo = function() {
   GPIO.set_mode(led, GPIO.MODE_OUTPUT);
   Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
     let value = GPIO.toggle(led);
-    print('Rate = ',rate,' interrupts/sec , ADC = ',ADC.read(adc));
+    print('Rate = ',rate*30,' RPM , TDS = ',ADC.read(adc));
     rate=0;
   }, null);
+  
+  
+  RPC.addHandler('status',function(args){
+    
+    let val={
+    interrupts_sec:rate,
+    adc_val:ADC.read(adc),
+    uptime:Sys.uptime,
+    total_ram: Sys.total_ram(),
+    free_ram: Sys.free_ram()
+    }
+    
+    return val;
+  })
+  
+  
+  
+  
+  
+  
+  
 
 /***************CONNECTION *******************************/
 
