@@ -40,8 +40,8 @@ let getInfo = function() {
 let blink=function(){
   
   GPIO.write(led,1); 
-  Sys.usleep(300);
-  GPIO.toggle(led);
+  Sys.usleep(1000);
+  GPIO.write(led,0); 
 };
   ADC.enable(adc);
   
@@ -57,7 +57,7 @@ let blink=function(){
    
   GPIO.set_mode(led, GPIO.MODE_OUTPUT);
   Timer.set(1000 /* 1 sec */, Timer.REPEAT, function() {
-    let value = GPIO.toggle(led);
+    //let value = GPIO.toggle(led);
     print('Interrupt Rate = ',rate,' RPM , TDS = ',ADC.read(adc));
     rate=0;
   }, null);
@@ -66,8 +66,13 @@ let blink=function(){
   RPC.addHandler('status',function(args){
     
     let val={
-    interrupts_sec:rate,
-    adc_val:ADC.read(adc), 
+    
+    water_flow:true,
+    ro_power:true,
+    pump_power:true,
+    rps:rate,
+    tds_0:ADC.read(adc), 
+    tds_1:0, 
     total_ram: Sys.total_ram(),
     free_ram: Sys.free_ram()
     };

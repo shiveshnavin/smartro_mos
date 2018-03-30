@@ -42,7 +42,7 @@ let blink=function(){
   GPIO.write(led,1); 
   Sys.usleep(300);
   GPIO.toggle(led);
-}
+};
   ADC.enable(adc);
   
   //print("START");
